@@ -17,7 +17,6 @@ function ViewResume() {
 
   const GetResumeInfo = useCallback(() => {
     LocalStorageApi.GetResumeById(resumeId).then((resp) => {
-      console.log('Resume loaded:', resp.data.data);
       setResumeInfo(resp.data.data);
     }).catch(error => {
       console.error('Error loading resume:', error);

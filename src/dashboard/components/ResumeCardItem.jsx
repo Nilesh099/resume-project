@@ -36,7 +36,6 @@ function ResumeCardItem({resume,refreshData}) {
   const onDelete=()=>{
     setLoading(true);
     LocalStorageApi.DeleteResumeById(resume.documentId).then(resp=>{
-      console.log(resp);
       toast('Resume Deleted!');
       refreshData()
       setLoading(false);

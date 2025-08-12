@@ -41,7 +41,6 @@ const simulateApiResponse = (data, delay = 300) => {
 const CreateNewResume = async (requestData) => {
   const resumes = getAllResumes();
   const documentId = generateId();
-  console.log('Creating new resume with documentId:', documentId);
   
   const newResume = {
     ...requestData.data,
@@ -64,7 +63,6 @@ const CreateNewResume = async (requestData) => {
     projects: []
   };
   
-  console.log('New resume created:', newResume);
   resumes.push(newResume);
   saveResumes(resumes);
   
@@ -99,22 +97,16 @@ const UpdateResumeDetail = async (id, requestData) => {
 };
 
 const GetResumeById = async (id) => {
-  console.log('GetResumeById called with id:', id);
   const resumes = getAllResumes();
-  console.log('All resumes in storage:', resumes);
-  console.log('Looking for resume with documentId or id:', id);
   
   const resume = resumes.find(resume => {
-    console.log('Checking resume:', { documentId: resume.documentId, id: resume.id });
     return resume.documentId === id || resume.id === id;
   });
   
   if (!resume) {
-    console.log('Resume not found for id:', id);
     throw new Error('Resume not found');
   }
   
-  console.log('Found resume:', resume);
   return simulateApiResponse(resume);
 };
 

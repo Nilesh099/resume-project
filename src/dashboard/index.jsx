@@ -17,7 +17,6 @@ function Dashboard() {
   const GetResumesList=()=>{
     LocalStorageApi.GetUserResumes("user@resume.com")
     .then(resp=>{
-      console.log(resp.data.data)
       setResumeList(resp.data.data);
     })
   }

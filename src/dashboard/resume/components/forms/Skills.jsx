@@ -50,14 +50,12 @@ function Skills() {
             }
         }
 
-        LocalStorageApi.UpdateResumeDetail(resumeId,data)
-        .then(resp=>{
-            console.log(resp);
+        GlobalApi.UpdateResumeDetail(params.resumeId,data).then(res=>{
             setLoading(false);
             toast('Details updated !')
         },(error)=>{
             setLoading(false);
-            toast('Server Error, Try again!')
+            toast('Server Error, Please try again!')
         })
     }
 

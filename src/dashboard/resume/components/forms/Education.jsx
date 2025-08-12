@@ -59,7 +59,6 @@ function Education() {
     }
 
     LocalStorageApi.UpdateResumeDetail(params.resumeId,data).then(resp=>{
-      console.log(resp);
       setLoading(false)
       toast('Details updated !')
     },(error)=>{

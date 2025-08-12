@@ -26,13 +26,11 @@ function EditResume() {
 
     const GetResumeInfo = useCallback(() => {
         LocalStorageApi.GetResumeById(resumeId).then(resp=>{
-          console.log('Resume loaded:', resp.data.data);
           setResumeInfo(resp.data.data);
           undoRedo.setState(resp.data.data);
         }).catch(error => {
           console.error('Error loading resume:', error);
           // If resume not found, create a default structure
-          console.log('Resume not found, creating default structure');
           const defaultResumeInfo = {
             documentId: resumeId,
             firstName: '',

@@ -15,7 +15,7 @@ function PersonalDetail({enabledNext}) {
     const [formData,setFormData]=useState();
     const [loading,setLoading]=useState(false);
     useEffect(()=>{
-        console.log("---",resumeInfo)
+        
     },[])
 
     const handleInputChange=(e)=>{
@@ -38,13 +38,13 @@ function PersonalDetail({enabledNext}) {
         const data={
             data:formData
         }
-        LocalStorageApi.UpdateResumeDetail(params?.resumeId,data).then(resp=>{
-            console.log(resp);
+                GlobalApi.UpdateResumeDetail(params?.resumeId,data).then(resp=>{
             enabledNext(true);
             setLoading(false);
             toast("Details updated")
         },(error)=>{
             setLoading(false);
+        
         })
         
     }

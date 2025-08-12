@@ -106,7 +106,7 @@
 /* Drag handle styling */
 .drag-handle {
   cursor: grab;
-  color: #9ca3af;
+  color: #6b7280;
   padding: 4px;
   border-radius: 4px;
   transition: all 0.2s;
