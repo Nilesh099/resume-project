@@ -9,9 +9,15 @@ import { toast } from "sonner";
 
 function Summery({ enabledNext }) {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
-  const [summery, setSummery] = useState(resumeInfo?.summery ?? "");
+  const [summery, setSummery] = useState("");
   const [loading, setLoading] = useState(false);
   const params = useParams();
+
+  useEffect(() => {
+    if (resumeInfo?.summery !== undefined) {
+      setSummery(resumeInfo.summery);
+    }
+  }, [resumeInfo?.summery]);
 
   useEffect(() => {
     setResumeInfo((prev) => ({ ...prev, summery }));

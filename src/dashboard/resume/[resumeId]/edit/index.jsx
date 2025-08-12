@@ -29,7 +29,6 @@ function EditResume() {
           setResumeInfo(resp.data.data);
           undoRedo.setState(resp.data.data);
         }).catch(error => {
-          console.error('Error loading resume:', error);
           // If resume not found, create a default structure
           const defaultResumeInfo = {
             documentId: resumeId,

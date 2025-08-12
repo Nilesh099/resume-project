@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom'
 import LocalStorageApi from './../../../../../service/LocalStorageApi'
 import { toast } from 'sonner'
 
-function Education() {
+function Education({ enabledNext }) {
 
   const [loading,setLoading]=useState(false);
   const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
@@ -25,8 +25,19 @@ function Education() {
   ])
 
   useEffect(()=>{
-    resumeInfo&&setEducationalList(resumeInfo?.education)
-  },[])
+    if (resumeInfo?.education && resumeInfo.education.length > 0) {
+      setEducationalList(resumeInfo.education)
+    } else if (resumeInfo && (!resumeInfo.education || resumeInfo.education.length === 0)) {
+      setEducationalList([{
+        universityName:'',
+        degree:'',
+        major:'',
+        startDate:'',
+        endDate:'',
+        description:''
+      }])
+    }
+  },[resumeInfo?.education])
   const handleChange=(event,index)=>{
     const newEntries=educationalList.slice();
     const {name,value}=event.target;
@@ -59,8 +70,9 @@ function Education() {
     }
 
     LocalStorageApi.UpdateResumeDetail(params.resumeId,data).then(resp=>{
-      setLoading(false)
-      toast('Details updated !')
+      setLoading(false);
+      toast('Details updated !');
+      enabledNext && enabledNext(true);
     },(error)=>{
       setLoading(false);
       toast('Server Error, Please try again!')

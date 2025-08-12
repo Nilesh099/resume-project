@@ -36,16 +36,19 @@ const formField={
     workSummery:'',
 
 }
-function Experience() {
+function Experience({ enabledNext }) {
     const [experinceList,setExperinceList]=useState([]);
     const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
     const params=useParams();
     const [loading,setLoading]=useState(false);
 
     useEffect(()=>{
-        resumeInfo?.Experience.length>0&&setExperinceList(resumeInfo?.Experience)
-        
-    },[])
+        if (resumeInfo?.Experience && resumeInfo.Experience.length > 0) {
+            setExperinceList(resumeInfo.Experience)
+        } else if (resumeInfo && (!resumeInfo.Experience || resumeInfo.Experience.length === 0)) {
+            setExperinceList([formField])
+        }
+    },[resumeInfo?.Experience])
 
     const handleChange=(index,event)=>{
         const newEntries=experinceList.slice();
@@ -97,7 +100,8 @@ function Experience() {
 
         LocalStorageApi.UpdateResumeDetail(params?.resumeId,data).then(res=>{
             setLoading(false);
-            toast('Details updated !')
+            toast('Details updated !');
+            enabledNext && enabledNext(true);
         },(error)=>{
             setLoading(false);
         })

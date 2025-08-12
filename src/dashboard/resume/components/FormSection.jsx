@@ -25,35 +25,43 @@ function FormSection({ undoRedo }) {
          
           </div>
           <div className='flex gap-2'>
-            {activeFormIndex>1
-            &&<Button size="sm" 
-            onClick={()=>setActiveFormIndex(activeFormIndex-1)}> <ArrowLeft/> </Button> }
-            <Button 
-            disabled={!enableNext}
-            className="flex gap-2" size="sm"
-            onClick={()=>setActiveFormIndex(activeFormIndex+1)}
-            > Next 
-            <ArrowRight/> </Button>
+            {activeFormIndex > 1 && (
+              <Button 
+                size="sm" 
+                onClick={() => setActiveFormIndex(activeFormIndex - 1)}
+              > 
+                <ArrowLeft/> 
+              </Button>
+            )}
+            {activeFormIndex < 7 && (
+              <Button 
+                disabled={!enableNext}
+                className="flex gap-2" 
+                size="sm"
+                onClick={() => setActiveFormIndex(activeFormIndex + 1)}
+              > 
+                Next 
+                <ArrowRight/> 
+              </Button>
+            )}
           </div>
         </div>
-        {/* Personal Detail  */}
-        {activeFormIndex==1?  
-        <PersonalDetail enabledNext={(v)=>setEnableNext(v)} />
-        :activeFormIndex==2?
-              <Summery  enabledNext={(v)=>setEnableNext(v)} />
-        :activeFormIndex==3?
-          <Experience />  
-          :activeFormIndex==4?
-          <Education/>
-          :activeFormIndex==5?
-          <Projects/>
-          :activeFormIndex==6?
-          <Skills/>
-          :activeFormIndex==7?
-          <Navigate to={'/my-resume/'+resumeId+"/view"}/>
-              
-        :null
-          }
+        {/* Form Components */}
+        {activeFormIndex === 1 ? (
+          <PersonalDetail enabledNext={(v) => setEnableNext(v)} />
+        ) : activeFormIndex === 2 ? (
+          <Summery enabledNext={(v) => setEnableNext(v)} />
+        ) : activeFormIndex === 3 ? (
+          <Experience enabledNext={(v) => setEnableNext(v)} />  
+        ) : activeFormIndex === 4 ? (
+          <Education enabledNext={(v) => setEnableNext(v)} />
+        ) : activeFormIndex === 5 ? (
+          <Projects enabledNext={(v) => setEnableNext(v)} />
+        ) : activeFormIndex === 6 ? (
+          <Skills enabledNext={(v) => setEnableNext(v)} />
+        ) : activeFormIndex === 7 ? (
+          <Navigate to={'/my-resume/' + resumeId + "/view"} />
+        ) : null}
         
 
       {/* Experience  */}

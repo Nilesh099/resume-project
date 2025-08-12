@@ -158,7 +158,7 @@ SortableProjectItem.propTypes = {
   onAddTech: PropTypes.func.isRequired,
 };
 
-function Projects() {
+function Projects({ enabledNext }) {
   const [loading, setLoading] = useState(false);
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
   const params = useParams();
@@ -180,6 +180,7 @@ function Projects() {
   );
 
   useEffect(() => {
+    // Initialize projects data when resumeInfo becomes available
     if (resumeInfo?.projects && resumeInfo.projects.length > 0) {
       // Ensure each project has an id for drag-drop
       const projectsWithIds = resumeInfo.projects.map((project, index) => ({
@@ -188,7 +189,7 @@ function Projects() {
         techStack: project.techStack || [""],
       }));
       setProjectsList(projectsWithIds);
-    } else {
+    } else if (resumeInfo && (!resumeInfo.projects || resumeInfo.projects.length === 0)) {
       // Initialize with one empty project if no projects exist
       setProjectsList([
         {
@@ -208,10 +209,10 @@ function Projects() {
     setProjectsList(newProjects);
 
     // Update resumeInfo immediately when projects change
-    setResumeInfo({
-      ...resumeInfo,
+    setResumeInfo(prevResumeInfo => ({
+      ...prevResumeInfo,
       projects: newProjects,
-    });
+    }));
   };
 
   const handleDragEnd = (event) => {
@@ -224,10 +225,10 @@ function Projects() {
         const newProjects = arrayMove(items, oldIndex, newIndex);
 
         // Update resumeInfo immediately after drag
-        setResumeInfo({
-          ...resumeInfo,
+        setResumeInfo(prevResumeInfo => ({
+          ...prevResumeInfo,
           projects: newProjects,
-        });
+        }));
 
         return newProjects;
       });
@@ -248,10 +249,10 @@ function Projects() {
     setProjectsList(newProjects);
 
     // Update resumeInfo immediately
-    setResumeInfo({
-      ...resumeInfo,
+    setResumeInfo(prevResumeInfo => ({
+      ...prevResumeInfo,
       projects: newProjects,
-    });
+    }));
   };
 
   const removeProject = () => {
@@ -260,10 +261,10 @@ function Projects() {
       setProjectsList(newProjects);
 
       // Update resumeInfo immediately
-      setResumeInfo({
-        ...resumeInfo,
+      setResumeInfo(prevResumeInfo => ({
+        ...prevResumeInfo,
         projects: newProjects,
-      });
+      }));
     }
   };
 
@@ -276,10 +277,10 @@ function Projects() {
     setProjectsList(newProjects);
 
     // Update resumeInfo immediately
-    setResumeInfo({
-      ...resumeInfo,
+    setResumeInfo(prevResumeInfo => ({
+      ...prevResumeInfo,
       projects: newProjects,
-    });
+    }));
   };
 
   const removeTech = (projectIndex, techIndex) => {
@@ -292,10 +293,10 @@ function Projects() {
       setProjectsList(newProjects);
 
       // Update resumeInfo immediately
-      setResumeInfo({
-        ...resumeInfo,
+      setResumeInfo(prevResumeInfo => ({
+        ...prevResumeInfo,
         projects: newProjects,
-      });
+      }));
     }
   };
 
@@ -322,12 +323,13 @@ function Projects() {
       .then((resp) => {
         setLoading(false);
         toast("Projects updated!");
+        enabledNext && enabledNext(true);
 
         // Update the context with the saved data
-        setResumeInfo({
-          ...resumeInfo,
+        setResumeInfo(prevResumeInfo => ({
+          ...prevResumeInfo,
           projects: cleanProjects,
-        });
+        }));
       })
       .catch((error) => {
         setLoading(false);

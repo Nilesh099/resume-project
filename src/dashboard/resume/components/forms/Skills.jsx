@@ -9,7 +9,7 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import LocalStorageApi from './../../../../../service/LocalStorageApi'
 import { useParams } from 'react-router-dom'
 import { toast } from 'sonner'
-function Skills() {
+function Skills({ enabledNext }) {
 
     const [skillsList,setSkillsList]=useState([{
         name:'',
@@ -21,8 +21,15 @@ function Skills() {
     const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
    
     useEffect(()=>{
-        resumeInfo&&setSkillsList(resumeInfo?.skills)
-      },[])
+        if (resumeInfo?.skills && resumeInfo.skills.length > 0) {
+            setSkillsList(resumeInfo.skills)
+        } else if (resumeInfo && (!resumeInfo.skills || resumeInfo.skills.length === 0)) {
+            setSkillsList([{
+                name:'',
+                rating:0
+            }])
+        }
+    },[resumeInfo?.skills])
    
     const handleChange=(index,name,value)=>{
         const newEntries=skillsList.slice();
@@ -50,9 +57,10 @@ function Skills() {
             }
         }
 
-        GlobalApi.UpdateResumeDetail(params.resumeId,data).then(res=>{
+        LocalStorageApi.UpdateResumeDetail(resumeId,data).then(res=>{
             setLoading(false);
-            toast('Details updated !')
+            toast('Details updated !');
+            enabledNext && enabledNext(true);
         },(error)=>{
             setLoading(false);
             toast('Server Error, Please try again!')

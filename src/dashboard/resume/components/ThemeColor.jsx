@@ -68,7 +68,6 @@ function ThemeColor() {
             }
         }
         LocalStorageApi.UpdateResumeDetail(resumeId,data).then(resp=>{
-            console.log(resp);
             toast('Theme Updated Successfully')
         })
     }
