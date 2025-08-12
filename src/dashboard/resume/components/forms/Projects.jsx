@@ -171,6 +171,7 @@ function Projects({ enabledNext }) {
       techStack: [""],
     },
   ]);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -180,39 +181,41 @@ function Projects({ enabledNext }) {
   );
 
   useEffect(() => {
-    // Initialize projects data when resumeInfo becomes available
-    if (resumeInfo?.projects && resumeInfo.projects.length > 0) {
-      // Ensure each project has an id for drag-drop
-      const projectsWithIds = resumeInfo.projects.map((project, index) => ({
-        ...project,
-        id: project.id || String(index + 1),
-        techStack: project.techStack || [""],
-      }));
-      setProjectsList(projectsWithIds);
-    } else if (resumeInfo && (!resumeInfo.projects || resumeInfo.projects.length === 0)) {
-      // Initialize with one empty project if no projects exist
-      setProjectsList([
-        {
-          id: "1",
-          title: "",
-          url: "",
-          description: "",
-          techStack: [""],
-        },
-      ]);
+    // Initialize projects data when resumeInfo becomes available (only once)
+    if (resumeInfo && !isInitialized) {
+      if (resumeInfo?.projects && resumeInfo.projects.length > 0) {
+        // Ensure each project has an id for drag-drop
+        const projectsWithIds = resumeInfo.projects.map((project, index) => ({
+          ...project,
+          id: project.id || String(index + 1),
+          techStack: project.techStack || [""],
+        }));
+        setProjectsList(projectsWithIds);
+      } else {
+        // Initialize with one empty project if no projects exist
+        setProjectsList([
+          {
+            id: "1",
+            title: "",
+            url: "",
+            description: "",
+            techStack: [""],
+          },
+        ]);
+      }
+      setIsInitialized(true);
     }
-  }, [resumeInfo?.projects]);
+  }, [resumeInfo, isInitialized]);
+
+  // Reset initialization when resumeId changes
+  useEffect(() => {
+    setIsInitialized(false);
+  }, [params?.resumeId]);
 
   const handleProjectChange = (index, field, value) => {
     const newProjects = [...projectsList];
     newProjects[index][field] = value;
     setProjectsList(newProjects);
-
-    // Update resumeInfo immediately when projects change
-    setResumeInfo(prevResumeInfo => ({
-      ...prevResumeInfo,
-      projects: newProjects,
-    }));
   };
 
   const handleDragEnd = (event) => {
@@ -222,15 +225,7 @@ function Projects({ enabledNext }) {
       setProjectsList((items) => {
         const oldIndex = items.findIndex((item) => item.id === active.id);
         const newIndex = items.findIndex((item) => item.id === over.id);
-        const newProjects = arrayMove(items, oldIndex, newIndex);
-
-        // Update resumeInfo immediately after drag
-        setResumeInfo(prevResumeInfo => ({
-          ...prevResumeInfo,
-          projects: newProjects,
-        }));
-
-        return newProjects;
+        return arrayMove(items, oldIndex, newIndex);
       });
     }
   };
@@ -247,24 +242,12 @@ function Projects({ enabledNext }) {
       },
     ];
     setProjectsList(newProjects);
-
-    // Update resumeInfo immediately
-    setResumeInfo(prevResumeInfo => ({
-      ...prevResumeInfo,
-      projects: newProjects,
-    }));
   };
 
   const removeProject = () => {
     if (projectsList.length > 1) {
       const newProjects = projectsList.slice(0, -1);
       setProjectsList(newProjects);
-
-      // Update resumeInfo immediately
-      setResumeInfo(prevResumeInfo => ({
-        ...prevResumeInfo,
-        projects: newProjects,
-      }));
     }
   };
 
@@ -275,12 +258,6 @@ function Projects({ enabledNext }) {
     }
     newProjects[projectIndex].techStack.push("");
     setProjectsList(newProjects);
-
-    // Update resumeInfo immediately
-    setResumeInfo(prevResumeInfo => ({
-      ...prevResumeInfo,
-      projects: newProjects,
-    }));
   };
 
   const removeTech = (projectIndex, techIndex) => {
@@ -291,12 +268,6 @@ function Projects({ enabledNext }) {
     ) {
       newProjects[projectIndex].techStack.splice(techIndex, 1);
       setProjectsList(newProjects);
-
-      // Update resumeInfo immediately
-      setResumeInfo(prevResumeInfo => ({
-        ...prevResumeInfo,
-        projects: newProjects,
-      }));
     }
   };
 

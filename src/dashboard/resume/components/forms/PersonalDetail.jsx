@@ -13,10 +13,16 @@ function PersonalDetail({ enabledNext }) {
 
   const [formData, setFormData] = useState({})
   const [loading, setLoading] = useState(false)
+  const [isInitialized, setIsInitialized] = useState(false)
+
+  // Reset initialization when resumeId changes
+  useEffect(() => {
+    setIsInitialized(false);
+  }, [params?.resumeId]);
 
   useEffect(() => {
-    // Initialize form data when resumeInfo becomes available
-    if (resumeInfo && Object.keys(resumeInfo).length > 0) {
+    // Initialize form data when resumeInfo becomes available (only once per resume)
+    if (resumeInfo && Object.keys(resumeInfo).length > 0 && !isInitialized) {
       const newFormData = {
         firstName: resumeInfo.firstName || '',
         lastName: resumeInfo.lastName || '',
@@ -26,8 +32,9 @@ function PersonalDetail({ enabledNext }) {
         email: resumeInfo.email || '',
       }
       setFormData(newFormData)
+      setIsInitialized(true)
     }
-  }, [resumeInfo])
+  }, [resumeInfo, isInitialized])
 
   const handleInputChange = (e) => {
     enabledNext(false)

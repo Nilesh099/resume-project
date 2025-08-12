@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 function Skills({ enabledNext }) {
 
     const [skillsList,setSkillsList]=useState([{
+        id: Date.now(),
         name:'',
         rating:0
     }])
@@ -19,17 +20,32 @@ function Skills({ enabledNext }) {
 
     const [loading,setLoading]=useState(false);
     const {resumeInfo,setResumeInfo}=useContext(ResumeInfoContext);
+    const [isInitialized, setIsInitialized] = useState(false);
    
     useEffect(()=>{
-        if (resumeInfo?.skills && resumeInfo.skills.length > 0) {
-            setSkillsList(resumeInfo.skills)
-        } else if (resumeInfo && (!resumeInfo.skills || resumeInfo.skills.length === 0)) {
-            setSkillsList([{
-                name:'',
-                rating:0
-            }])
+        if (resumeInfo && !isInitialized) {
+            if (resumeInfo?.skills && resumeInfo.skills.length > 0) {
+                // Ensure all skills have IDs
+                const skillsWithIds = resumeInfo.skills.map((skill, index) => ({
+                    ...skill,
+                    id: skill.id || Date.now() + index
+                }));
+                setSkillsList(skillsWithIds);
+            } else {
+                setSkillsList([{
+                    id: Date.now(),
+                    name:'',
+                    rating:0
+                }])
+            }
+            setIsInitialized(true);
         }
-    },[resumeInfo?.skills])
+    },[resumeInfo, isInitialized])
+
+    // Reset initialization when resumeId changes
+    useEffect(() => {
+        setIsInitialized(false);
+    }, [resumeId]);
    
     const handleChange=(index,name,value)=>{
         const newEntries=skillsList.slice();
@@ -39,13 +55,17 @@ function Skills({ enabledNext }) {
     }
 
     const AddNewSkills=()=>{
-        setSkillsList([...skillsList,{
+        const newSkill = {
+            id: Date.now(),
             name:'',
-        rating:0 
-        }])
+            rating:0 
+        };
+        setSkillsList(prev => [...prev, newSkill]);
     }
     const RemoveSkills=()=>{
-        setSkillsList(skillsList=>skillsList.slice(0,-1))
+        if (skillsList.length > 1) {
+            setSkillsList(skillsList=>skillsList.slice(0,-1))
+        }
     }
 
     const onSave=()=>{
@@ -61,18 +81,17 @@ function Skills({ enabledNext }) {
             setLoading(false);
             toast('Details updated !');
             enabledNext && enabledNext(true);
+            // Update context with saved data
+            setResumeInfo(prev => ({
+                ...prev,
+                skills: skillsList
+            }));
         },(error)=>{
             setLoading(false);
             toast('Server Error, Please try again!')
         })
     }
 
-    useEffect(()=>{
-        setResumeInfo({
-            ...resumeInfo,
-            skills:skillsList
-        })
-    },[skillsList])
   return (
     <div className='p-5 shadow-lg rounded-lg border-t-primary border-t-4 mt-10'>
     <h2 className='font-bold text-lg'>Skills</h2>
@@ -80,11 +99,11 @@ function Skills({ enabledNext }) {
 
     <div>
         {skillsList.map((item,index)=>(
-            <div className='flex justify-between mb-2 border rounded-lg p-3 '>
+            <div key={item.id || index} className='flex justify-between mb-2 border rounded-lg p-3 '>
                 <div>
                     <label className='text-xs'>Name</label>
                     <Input className="w-full"
-                    defaultValue={item.name}
+                    value={item.name || ''}
                     onChange={(e)=>handleChange(index,'name',e.target.value)} />
                 </div>
                 <Rating style={{ maxWidth: 120 }} value={item.rating} 

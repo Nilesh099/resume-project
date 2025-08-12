@@ -41,7 +41,7 @@ function EnhancedThemeSelector({ undoRedo }) {
   return (
     <div className="flex gap-2">
       {/* Undo/Redo Buttons */}
-      {undoRedo && (
+      {/* {undoRedo && (
         <>
           <Button
             variant="outline"
@@ -62,7 +62,7 @@ function EnhancedThemeSelector({ undoRedo }) {
             <Redo className="w-4 h-4" />
           </Button>
         </>
-      )}
+      )} */}
 
       {/* Theme Selector */}
       <Popover>

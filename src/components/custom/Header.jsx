@@ -10,10 +10,7 @@ function Header() {
             <div className='flex gap-2 items-center'>
                 <Link to={'/'}>
                     <Button variant="outline">Dashboard</Button>
-                </Link>
-                <div className="text-sm text-gray-600">
-                    Interactive Resume Builder
-                </div>
+                </Link>                
             </div>
         </div>
     )

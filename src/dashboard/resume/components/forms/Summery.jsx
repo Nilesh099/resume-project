@@ -19,10 +19,6 @@ function Summery({ enabledNext }) {
     }
   }, [resumeInfo?.summery]);
 
-  useEffect(() => {
-    setResumeInfo((prev) => ({ ...prev, summery }));
-  }, [summery, setResumeInfo]);
-
   const onSave = async (e) => {
     e.preventDefault();
     const value = summery.trim();
@@ -34,6 +30,11 @@ function Summery({ enabledNext }) {
       await LocalStorageApi.UpdateResumeDetail(params?.resumeId, data);
       enabledNext?.(true);
       toast.success("Details updated");
+      // Update context with saved data
+      setResumeInfo(prev => ({
+          ...prev,
+          summery: value
+      }));
     } catch (error) {
       console.error(error);
       toast.error("Failed to update details");
