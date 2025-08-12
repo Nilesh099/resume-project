@@ -24,7 +24,6 @@ function AddResume() {
     const data = {
       data: {
         title: resumeTitle,
-        resumeId: uuid,
         userEmail: "user@resume.com",
         userName: "User"
       }
@@ -32,13 +31,17 @@ function AddResume() {
 
     LocalStorageApi.CreateNewResume(data).then(
       (resp) => {
-        console.log(resp);
-        if (resp) {
+        if (resp && resp.data && resp.data.data) {
           setLoading(false);
-          navigation("/dashboard/resume/" + resp?.data?.resumeId + "/edit");
+          const resumeId = resp.data.data.documentId;
+          navigation("/dashboard/resume/" + resumeId + "/edit");
+        } else {
+          console.error('Invalid response structure:', resp);
+          setLoading(false);
         }
       },
-      () => {
+      (error) => {
+        console.error('Error creating resume:', error);
         setLoading(false);
       }
     );

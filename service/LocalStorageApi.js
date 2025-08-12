@@ -43,9 +43,12 @@ const CreateNewResume = async (requestData) => {
   const documentId = generateId();
   
   const newResume = {
-    ...requestData.data,
+    title: requestData.data.title || 'Untitled Resume',
+    userEmail: requestData.data.userEmail || 'user@resume.com',
+    userName: requestData.data.userName || 'User',
     documentId: documentId,
     id: documentId, // Use same ID for consistency
+    resumeId: documentId, // Also add resumeId for backwards compatibility
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
     // Initialize with default structure
