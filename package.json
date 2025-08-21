@@ -46,6 +46,7 @@
     "@types/react-dom": "^18.2.22",
     "@vitejs/plugin-react": "^4.2.1",
     "autoprefixer": "^10.4.19",
+    "cypress": "^14.5.4",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.1",
     "eslint-plugin-react-hooks": "^4.6.0",
@@ -53,5 +54,16 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
     "vite": "^5.2.0"
-  }
+  },
+  "description": "## 📁 Project Structure",
+  "main": "postcss.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nilesh099/resume-project.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Nilesh099/resume-project/issues"
+  },
+  "homepage": "https://github.com/Nilesh099/resume-project#readme"
 }
